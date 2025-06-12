@@ -1,0 +1,19 @@
+[project]
+name = "word-form-processor"
+version = "1.0.0"
+description = "MCP Server para procesamiento automatizado de formularios Word"
+authors = [
+    {name = "Usuario", email = "usuario@example.com"}
+]
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "python-docx>=1.1.0",
+]
+requires-python = ">=3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = []
