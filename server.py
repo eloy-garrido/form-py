@@ -70,7 +70,7 @@ def replace_fields_in_document(doc: Document, fields_data: Dict[str, str]) -> in
     Retorna el número de reemplazos realizados
     """
     replacements_count = 0
-    
+    print(f"[DEBUG] replace_fields_in_document - Iniciando reemplazo con datos: {fields_data}") # DEBUG
     def replace_in_runs(paragraph, fields_data):
         """Reemplaza campos en un párrafo de manera eficiente"""
         count = 0
@@ -82,10 +82,13 @@ def replace_fields_in_document(doc: Document, fields_data: Dict[str, str]) -> in
             for field, value in fields_data.items():
                 pattern = f"{{{{{field}}}}}"
                 if pattern in new_text:
+                    print(f"[DEBUG] replace_in_runs - Encontrado patrón '{pattern}' en el texto. Reemplazando con '{value}'.") # DEBUG
                     occurrences = new_text.count(pattern)
                     new_text = new_text.replace(pattern, str(value))
                     count += occurrences
             
+            if original_text != new_text:
+                print(f"[DEBUG] replace_in_runs - Texto original del run: '{original_text}', Texto nuevo: '{new_text}'") # DEBUG
             run.text = new_text
         return count
     
@@ -110,6 +113,7 @@ def replace_fields_in_document(doc: Document, fields_data: Dict[str, str]) -> in
             for paragraph in section.footer.paragraphs:
                 replacements_count += replace_in_runs(paragraph, fields_data)
     
+    print(f"[DEBUG] replace_fields_in_document - Total de reemplazos realizados: {replacements_count}") # DEBUG
     return replacements_count
 
 
@@ -146,6 +150,10 @@ def preview_replacements(fields_data: str) -> str:
         fields_data: JSON string con los datos de los campos
                     Ejemplo: '{"nombre_estudiante": "Juan Pérez", "rut_estudiante": "12345678-9"}'
     """
+    print(f"[DEBUG] preview_replacements - fields_data recibido: {fields_data}")  # DEBUG
+    try:
+        data = json.loads(fields_data)
+        print(f"[DEBUG] preview_replacements - datos parseados: {data}")  # DEBUG
     try:
         data = json.loads(fields_data)
         
@@ -175,6 +183,7 @@ def preview_replacements(fields_data: str) -> str:
         
         result += f"\n📊 Resumen: {len(replaced_fields)}/{len(template_fields)} campos se reemplazarían"
         
+        print(f"[DEBUG] preview_replacements - resultado: {result}")  # DEBUG
         return result
     
     except json.JSONDecodeError:
@@ -193,6 +202,11 @@ def generate_document(fields_data: str, filename_prefix: str = "") -> str:
                     Ejemplo: '{"nombre_estudiante": "Juan Pérez", "rut_estudiante": "12345678-9"}'
         filename_prefix: Prefijo opcional para el nombre del archivo (default: "")
     """
+    print(f"[DEBUG] generate_document - fields_data recibido: {fields_data}")  # DEBUG
+    print(f"[DEBUG] generate_document - filename_prefix: {filename_prefix}")  # DEBUG
+    try:
+        data = json.loads(fields_data)
+        print(f"[DEBUG] generate_document - datos parseados: {data}")  # DEBUG
     try:
         data = json.loads(fields_data)
         
